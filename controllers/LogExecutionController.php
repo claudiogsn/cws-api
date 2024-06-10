@@ -29,15 +29,31 @@ class LogExecutionController {
     public static function createLogExecution($data) {
         global $pdo;
 
-        $stmt = $pdo->prepare('INSERT INTO log_execution (estabelecimento, tipo, content, created_at) VALUES (:estabelecimento, :tipo, :content, :created_at)');
-        $stmt->execute([
-            ':estabelecimento' => $data['estabelecimento'],
-            ':tipo' => $data['tipo'],
-            ':content' => $data['content'],
-            ':created_at' => $data['created_at']
-        ]);
+        // Consultar tabela estabelecimento para obter cod_estabelecimento
+        $stmt = $pdo->prepare('SELECT cod_estabelecimento FROM estabelecimento WHERE cnpj = :cnpj AND hash = :hash');
+        $stmt->bindParam(':cnpj', $data['cnpj']);
+        $stmt->bindParam(':hash', $data['hash']);
+        $stmt->execute();
 
-        return ['id' => $pdo->lastInsertId()];
+        $estabelecimento = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($estabelecimento) {
+            $cod_estabelecimento = $estabelecimento['cod_estabelecimento'];
+
+            // Inserir log no banco de dados
+            $stmt = $pdo->prepare('INSERT INTO log_execution (estabelecimento, tipo, content, created_at) VALUES (:estabelecimento, :tipo, :content, :created_at)');
+            $stmt->execute([
+                ':estabelecimento' => $cod_estabelecimento,
+                ':tipo' => $data['tipo'],
+                ':content' => $data['content'],
+                ':created_at' => $data['created_at']
+            ]);
+
+            return ['id' => $pdo->lastInsertId()];
+        } else {
+            http_response_code(404);
+            return ['error' => 'Estabelecimento não encontrado'];
+        }
     }
 
     public static function updateLogExecution($id, $data) {

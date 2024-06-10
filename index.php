@@ -33,7 +33,7 @@ if (isset($data['method']) && isset($data['data'])) {
                 $response = EstabelecimentoController::deleteEstabelecimento($requestData['id']);
                 break;
 
-            // Métodos para LogExecutionController
+           // Métodos para LogExecutionController
             case 'getLogExecutions':
                 $response = LogExecutionController::getLogExecutions();
                 break;
