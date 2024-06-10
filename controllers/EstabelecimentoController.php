@@ -30,6 +30,17 @@ class EstabelecimentoController {
     public static function createEstabelecimento($data) {
         global $pdo;
 
+        $stmt = $pdo->prepare('SELECT * FROM estabelecimento WHERE cnpj = :cnpj and hash = :hash');
+        $stmt->bindParam(':cnpj', $data['cnpj']);
+        $stmt->bindParam(':hash', $data['hash']);
+        $stmt->execute();
+        $estabelecimentoCount = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($estabelecimentoCount) {
+            http_response_code(200);
+            return ['error' => 'Estabelecimento já cadastrado'];
+        }
+
         $stmt = $pdo->prepare('INSERT INTO estabelecimento (cod_estabelecimento, staus, cnpj, hash, version, atualizado) VALUES (:cod_estabelecimento, :staus, :cnpj, :hash, :version, :atualizado)');
         $stmt->execute([
             ':cod_estabelecimento' => $data['cod_estabelecimento'],
