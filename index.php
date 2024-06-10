@@ -5,6 +5,7 @@ require_once 'controllers/EstabelecimentoController.php';
 require_once 'controllers/LogExecutionController.php';
 require_once 'controllers/LogUpdateController.php';
 require_once 'controllers/VersionsController.php';
+require_once 'controllers/ValidationController.php';
 
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
@@ -83,10 +84,17 @@ if (isset($data['method']) && isset($data['data'])) {
                 $response = VersionsController::deleteVersion($requestData['id']);
                 break;
 
+            // Método para ValidationController
+            case 'validateEstabelecimento':
+                $response = ValidationController::validateEstabelecimento($requestData['cnpj'], $requestData['hash']);
+                break;
+
             default:
                 http_response_code(405);
                 $response = array('error' => 'Método não suportado');
                 break;
+
+            
         }
 
         header('Content-Type: application/json');
