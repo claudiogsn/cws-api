@@ -21,7 +21,7 @@ if (isset($data['method']) && isset($data['data'])) {
                 $response = EstabelecimentoController::getEstabelecimentos();
                 break;
             case 'getEstabelecimentoByCnpj':
-                $response = EstabelecimentoController::getEstabelecimentoByCnpj($requestData['cnpj']);
+                $response = EstabelecimentoController::getEstabelecimentoByCnpj($requestData['cnpj'], $requestData['hash']);
                 break;
             case 'createEstabelecimento':
                 $response = EstabelecimentoController::createEstabelecimento($requestData);
@@ -72,7 +72,7 @@ if (isset($data['method']) && isset($data['data'])) {
                 $response = VersionsController::getVersions();
                 break;
             case 'getVersionById':
-                $response = VersionsController::getVersionById($requestData['id']);
+                $response = VersionsController::getVersionById($requestData['version']);
                 break;
             case 'createVersion':
                 $response = VersionsController::createVersion($requestData);

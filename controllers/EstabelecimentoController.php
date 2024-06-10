@@ -16,11 +16,12 @@ class EstabelecimentoController {
         return $estabelecimentos;
     }
 
-    public static function getEstabelecimentoByCnpj($cnpj) {
+    public static function getEstabelecimentoByCnpj($cnpj,$hash) {
         global $pdo;
 
-        $stmt = $pdo->prepare('SELECT * FROM estabelecimento WHERE cnpj = :cnpj');
+        $stmt = $pdo->prepare('SELECT * FROM estabelecimento WHERE cnpj = :cnpj and hash = :hash');
         $stmt->bindParam(':cnpj', $cnpj);
+        $stmt->bindParam(':hash', $hash);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);

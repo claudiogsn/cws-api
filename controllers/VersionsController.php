@@ -16,11 +16,11 @@ class VersionsController {
         return $versions;
     }
 
-    public static function getVersionById($id) {
+    public static function getVersionById($version) {
         global $pdo;
 
-        $stmt = $pdo->prepare('SELECT * FROM versions WHERE id = :id');
-        $stmt->bindParam(':id', $id);
+        $stmt = $pdo->prepare('SELECT * FROM versions WHERE version = :version');
+        $stmt->bindParam(':version', $version);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
